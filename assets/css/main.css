@@ -3539,6 +3539,18 @@
                             color: #18bfef !important;
                         }
 
+                #nav ul.links li.logout {
+                    background-color: rgba(0, 0, 0, 0.3);
+                }
+
+                    #nav ul.links li.logout a {
+                        color: #888;
+                    }
+
+                    #nav ul.links li.logout a:hover {
+                        background-color: rgba(0, 0, 0, 0.6);
+                    }
+
         #nav ul.icons {
             -moz-flex-grow: 0;
             -webkit-flex-grow: 0;
