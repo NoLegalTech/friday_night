@@ -1,3 +1,30 @@
+<?php
+
+    session_start();
+
+    function verifyFormToken($form) {
+        if(!isset($_SESSION[$form.'_token'])) {
+            return false;
+        }
+        if(!isset($_POST['token'])) {
+            return false;
+        }
+        if ($_SESSION[$form.'_token'] !== $_POST['token']) {
+            return false;
+        }
+        return true;
+    }
+
+    if (verifyFormToken('form_registro')) {
+        // ... more security testing
+        // send email
+    } else {
+        echo "Hack-Attempt detected. Got ya!.";
+        writeLog('Formtoken');
+    }
+
+?>
+
 <!DOCTYPE HTML>
 <!--
     Massively by HTML5 UP
@@ -19,13 +46,13 @@
 
                 <!-- Header -->
                     <header id="header">
-                        <a href="index.html" class="logo">Lista viernes</a>
+                        <a href="index.php" class="logo">Lista viernes</a>
                     </header>
 
                 <!-- Nav -->
                     <nav id="nav">
                         <ul class="links">
-                            <li><a href="index.html">Lista Viernes</a></li>
+                            <li><a href="index.php">Lista Viernes</a></li>
                             <li><a href="faq.html">FAQ</a></li>
                             <li><a href="presentacion.html">Presentación</a></li>
                         </ul>

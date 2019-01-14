@@ -1,3 +1,17 @@
+<?php
+    session_start();
+
+    function generateFormToken($form) {
+        $token = md5(uniqid(microtime(), true));
+        $_SESSION[$form.'_token'] = $token;
+        return $token;
+    }
+
+    $token_registro = generateFormToken('form_registro');
+    $token_login = generateFormToken('form_login');
+
+?>
+
 <!DOCTYPE HTML>
 <!--
     Massively by HTML5 UP
@@ -29,13 +43,13 @@
 
                 <!-- Header -->
                     <header id="header">
-                        <a href="index.html" class="logo">Lista viernes</a>
+                        <a href="index.php" class="logo">Lista viernes</a>
                     </header>
 
                 <!-- Nav -->
                     <nav id="nav">
                         <ul class="links">
-                            <li class="active"><a href="index.html">Lista Viernes</a></li>
+                            <li class="active"><a href="index.php">Lista Viernes</a></li>
                             <li><a href="faq.html">FAQ</a></li>
                             <li><a href="presentacion.html">Presentación</a></li>
                         </ul>
@@ -88,7 +102,8 @@
                                             Inserta tu dirección de email (preferiblemente una que tengas expuesta en internet (tu empresa) o redes sociales (linkedin, twitter, instagram ¿?)
                                         </p>
 
-                                        <form method="post" action="registrado.html" class="alt">
+                                        <form id="form_registro" method="post" action="registrado.php" class="alt">
+                                            <input type="hidden" name="token" value="<?php echo $token_registro; ?>">
                                             <div class="row uniform">
                                                 <div class="12u$ 12u$(xsmall)">
                                                     <input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
@@ -121,7 +136,8 @@
                                             Inserta tu dirección de email (preferiblemente una que tengas expuesta en internet (tu empresa) o redes sociales (linkedin, twitter, instagram ¿?)
                                         </p>
 
-                                        <form method="post" action="identificado.html" class="alt">
+                                        <form id="form_login" method="post" action="identificado.html" class="alt">
+                                            <input type="hidden" name="token" value="<?php echo $token_login; ?>">
                                             <div class="row uniform">
                                                 <div class="12u$ 12u$(xsmall)">
                                                     <input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
