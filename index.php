@@ -106,12 +106,12 @@
                                             <input type="hidden" name="token" value="<?php echo $token_registro; ?>">
                                             <div class="row uniform">
                                                 <div class="12u$ 12u$(xsmall)">
-                                                    <input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
+                                                    <input type="email" name="email" id="email" value="" placeholder="Email" />
                                                 </div>
                                                 <!-- Break -->
                                                 <div class="12u 12u$(small)">
-                                                    <input type="checkbox" id="demo-copy" name="demo-copy">
-                                                    <label for="demo-copy">Confirmo que tengo derecho a voto en las elecciones de mayo de 2019</label>
+                                                    <input type="checkbox" id="confirm-vote" name="confirm-vote">
+                                                    <label for="confirm-vote">Confirmo que tengo derecho a voto en las elecciones de mayo de 2019</label>
                                                 </div>
                                                 <!-- Break -->
                                                 <div class="12u$">
@@ -140,10 +140,10 @@
                                             <input type="hidden" name="token" value="<?php echo $token_login; ?>">
                                             <div class="row uniform">
                                                 <div class="12u$ 12u$(xsmall)">
-                                                    <input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
+                                                    <input type="email" name="email" id="email" value="" placeholder="Email" />
                                                 </div>
                                                 <div class="12u$ 12u$(xsmall)">
-                                                    <input type="password" name="demo-email" id="demo-email" value="" placeholder="Contraseña" />
+                                                    <input type="password" name="pass" id="pass" value="" placeholder="Contraseña" />
                                                 </div>
                                                 <!-- Break -->
                                                 <div class="12u$">
