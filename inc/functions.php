@@ -59,3 +59,10 @@ LOG;
             }
         }
     }
+
+    function verifyUrl() {
+        if(!filter_var($_POST['u'], FILTER_VALIDATE_URL)) {
+            writeLog('URL Validation');
+            die('Please insert a valid URL');
+        }
+    }

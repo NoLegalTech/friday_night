@@ -100,6 +100,7 @@
 
                                         <form id="form_registro" method="post" action="registrado.php" class="alt">
                                             <input type="hidden" name="token" value="<?php echo $token_registro; ?>">
+                                            <input type="hidden" name="u" value="">
                                             <div class="row uniform">
                                                 <div class="12u$ 12u$(xsmall)">
                                                     <input type="email" name="email" id="email" value="" placeholder="Email" />
@@ -134,6 +135,7 @@
 
                                         <form id="form_login" method="post" action="identificado.html" class="alt">
                                             <input type="hidden" name="token" value="<?php echo $token_login; ?>">
+                                            <input type="hidden" name="u" value="">
                                             <div class="row uniform">
                                                 <div class="12u$ 12u$(xsmall)">
                                                     <input type="email" name="email" id="email" value="" placeholder="Email" />

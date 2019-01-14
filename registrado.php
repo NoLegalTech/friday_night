@@ -5,7 +5,8 @@
     require_once(__DIR__.'/inc/functions.php');
 
     if (verifyFormToken('form_registro')) {
-        verifyPostData(array('token', 'email', 'confirm-vote'));
+        verifyPostData(array('token', 'email', 'confirm-vote', 'u'));
+        verifyUrl();
         // send email
     } else {
         echo "Hack-Attempt detected. Got ya!.";
