@@ -7,6 +7,7 @@
     if (verifyFormToken('form_registro')) {
         verifyPostData(array('token', 'email', 'confirm-vote', 'u'));
         verifyUrl();
+        $db = connect();
         // send email
     } else {
         echo "Hack-Attempt detected. Got ya!.";

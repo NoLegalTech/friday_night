@@ -66,3 +66,13 @@ LOG;
             die('Please insert a valid URL');
         }
     }
+
+    function connect(){
+        $config = parse_ini_file(__DIR__.'/../../conf/viernes.ini');
+        $con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
+        if(!$con){
+            die("Failed to connect to Database");
+        }
+        return $con;
+    }
+
