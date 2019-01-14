@@ -51,3 +51,11 @@ LOG;
         }
     }
 
+    function verifyPostData($whitelist = array()) {
+        foreach ($_POST as $key=>$item) {
+            if (!in_array($key, $whitelist)) {
+                writeLog('Unknown form fields');
+                die("Hack-Attempt detected. Please use only the fields in the form");
+            }
+        }
+    }
