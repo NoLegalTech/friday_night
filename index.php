@@ -1,11 +1,7 @@
 <?php
     session_start();
 
-    function generateFormToken($form) {
-        $token = md5(uniqid(microtime(), true));
-        $_SESSION[$form.'_token'] = $token;
-        return $token;
-    }
+    require_once(__DIR__.'/inc/functions.php');
 
     $token_registro = generateFormToken('form_registro');
     $token_login = generateFormToken('form_login');
