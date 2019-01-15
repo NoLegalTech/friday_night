@@ -93,6 +93,7 @@
             <script src="assets/js/jquery.scrolly.min.js"></script>
             <script src="assets/js/skel.min.js"></script>
             <script src="assets/js/util.js"></script>
+            <script src="assets/js/crypto-js.js"></script>
             <script src="assets/js/main.js"></script>
 
     </body>

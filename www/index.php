@@ -103,7 +103,10 @@
                                             <input type="hidden" name="u" value="">
                                             <div class="row uniform">
                                                 <div class="12u$ 12u$(xsmall)">
-                                                    <input type="email" name="email" id="email" value="" placeholder="Email" />
+                                                    <input type="email" name="email" id="registro_email" value="" placeholder="Email" />
+                                                </div>
+                                                <div class="12u$ 12u$(xsmall)">
+                                                    <input type="password" name="pass" id="registro_pass" value="" placeholder="Contraseña" />
                                                 </div>
                                                 <!-- Break -->
                                                 <div class="12u 12u$(small)">
@@ -129,19 +132,15 @@
                                     </header>
 
                                     <!-- Form -->
-                                        <p>
-                                            Inserta tu dirección de email (preferiblemente una que tengas expuesta en internet (tu empresa) o redes sociales (linkedin, twitter, instagram ¿?)
-                                        </p>
-
                                         <form id="form_login" method="post" action="identificado.html" class="alt">
                                             <input type="hidden" name="token" value="<?php echo $token_login; ?>">
                                             <input type="hidden" name="u" value="">
                                             <div class="row uniform">
                                                 <div class="12u$ 12u$(xsmall)">
-                                                    <input type="email" name="email" id="email" value="" placeholder="Email" />
+                                                    <input type="email" name="email" id="login_email" value="" placeholder="Email" />
                                                 </div>
                                                 <div class="12u$ 12u$(xsmall)">
-                                                    <input type="password" name="pass" id="pass" value="" placeholder="Contraseña" />
+                                                    <input type="password" name="pass" id="login_pass" value="" placeholder="Contraseña" />
                                                 </div>
                                                 <!-- Break -->
                                                 <div class="12u$">
@@ -179,6 +178,7 @@
             <script src="assets/js/jquery.scrolly.min.js"></script>
             <script src="assets/js/skel.min.js"></script>
             <script src="assets/js/util.js"></script>
+            <script src="assets/js/crypto-js.js"></script>
             <script src="assets/js/main.js"></script>
 
     </body>

@@ -5,7 +5,7 @@
     require_once(__DIR__.'/inc/functions.php');
 
     if (verifyFormToken('form_registro')) {
-        verifyPostData(array('token', 'email', 'confirm-vote', 'u'));
+        verifyPostData(array('token', 'email', 'pass', 'confirm-vote', 'u'));
         verifyEmail();
         verifyUrl();
         $db = db_connect();
@@ -14,7 +14,7 @@
             doError('El email introducido corresponde a un usuario ya registrado y por tanto no se puede registrar de nuevo.');
         }
         $token_activation = getRandomToken();
-        if (db_insert($db, 'INSERT INTO usuario(email, activation_token) VALUES ("' . $_POST['email'] . '", "' . $token_activation . '")') === true) {
+        if (db_insert($db, 'INSERT INTO usuario(email, password, activation_token) VALUES ("' . $_POST['email'] . '", "' . $_POST['pass'] . '", "' . $token_activation . '")') === true) {
             // send email
         } else {
             doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
@@ -111,6 +111,7 @@
             <script src="assets/js/jquery.scrolly.min.js"></script>
             <script src="assets/js/skel.min.js"></script>
             <script src="assets/js/util.js"></script>
+            <script src="assets/js/crypto-js.js"></script>
             <script src="assets/js/main.js"></script>
 
     </body>
