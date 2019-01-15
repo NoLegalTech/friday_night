@@ -81,12 +81,6 @@ LOG;
         }
     }
 
-    function getPage($page) {
-        $currentPage = $_POST['u'];
-        $pos = strrpos($currentPage, '/');
-        return substr($currentPage, 0, $pos) . '/'.$page.'.php';
-    }
-
     function getCurrentUrl() {
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     }
@@ -98,10 +92,20 @@ LOG;
         return substr($url, $start + 1, $end - $start - 1);
     }
 
+    function getPage($page) {
+        $currentPage = getCurrentUrl();
+        $pos = strrpos($currentPage, '/');
+        return substr($currentPage, 0, $pos) . '/'.$page.'.php';
+    }
+
+    function redirect($page) {
+        header('Location: '. getPage($page));
+        die();
+    }
+
     function doError($message) {
         $_SESSION['error'] = $message;
-        header('Location: '. getPage('error'));
-        die();
+        redirect('error');
     }
 
     function db_connect() {
