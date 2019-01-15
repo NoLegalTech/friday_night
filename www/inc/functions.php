@@ -60,6 +60,14 @@ LOG;
         }
     }
 
+    function verifyEmail() {
+        $_POST['email'] = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            writeLog('Email Validation');
+            die('Please insert a valid Email');
+        }
+    }
+
     function verifyUrl() {
         if(!filter_var($_POST['u'], FILTER_VALIDATE_URL)) {
             writeLog('URL Validation');
@@ -67,12 +75,41 @@ LOG;
         }
     }
 
-    function connect(){
+    function getErrorPage() {
+        $currentPage = $_POST['u'];
+        $pos = strrpos($currentPage, '/');
+        return substr($currentPage, 0, $pos) . '/error.php';
+    }
+
+    function doError($message) {
+        $_SESSION['error'] = $message;
+        header('Location: '. getErrorPage());
+        die();
+    }
+
+    function db_connect() {
         $config = parse_ini_file(__DIR__.'/../../conf/viernes.ini');
         $con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
         if(!$con){
             die("Failed to connect to Database");
         }
         return $con;
+    }
+
+    function db_query($db, $sql) {
+        $result = $db->query($sql);
+
+        $rows = [];
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $rows []= $row;
+            }
+        }
+
+        return $rows;
+    }
+
+    function db_close($db) {
+        $db->close();
     }
 

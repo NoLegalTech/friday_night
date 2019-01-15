@@ -4,22 +4,6 @@
 
     require_once(__DIR__.'/inc/functions.php');
 
-    if (verifyFormToken('form_registro')) {
-        verifyPostData(array('token', 'email', 'confirm-vote', 'u'));
-        verifyEmail();
-        verifyUrl();
-        $db = db_connect();
-        $rows = db_query($db, 'SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '"');
-        if (count($rows) > 0) {
-            doError('El email introducido corresponde a un usuario ya registrado y por tanto no se puede registrar de nuevo.');
-        }
-        // send email
-    } else {
-        echo "Hack-Attempt detected. Got ya!.";
-        writeLog('form_registro');
-        die();
-    }
-
 ?>
 
 <!DOCTYPE HTML>
@@ -67,12 +51,19 @@
                         <!-- Post -->
                             <section class="post">
                                 <header>
-                                    <h2>Bienvenido, Pepe</h2>
+                                    <h2>Error</h2>
                                 </header>
 
 
-                                <h4>Comprueba tu correo para activar tu cuenta</h4>
-                                <p>Comprueba tu bandeja de entrada en p******u@gmail.com, donde te hemos enviado un correo con un enlace para activar tu cuenta.</p>
+                                <p>
+                                    <?php
+                                        if (isset($_SESSION['error'])) {
+                                            echo $_SESSION['error'];
+                                        } else {
+                                            echo 'Error inesperado.';
+                                        }
+                                    ?>
+                                </p>
 
                             </section>
 
@@ -105,5 +96,7 @@
 </html>
 
 <?php
+    unset($_SESSION['error']);
+
     db_close();
 ?>
