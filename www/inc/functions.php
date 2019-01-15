@@ -55,7 +55,7 @@ LOG;
         foreach ($_POST as $key=>$item) {
             if (!in_array($key, $whitelist)) {
                 writeLog('Unknown form fields');
-                die("Hack-Attempt detected. Please use only the fields in the form");
+                doError("Hack-Attempt detected. Please use only the fields in the form.");
             }
         }
     }
@@ -64,14 +64,14 @@ LOG;
         $_POST['email'] = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
             writeLog('Email Validation');
-            die('Please insert a valid Email');
+            doError('Please insert a valid Email.');
         }
     }
 
     function verifyUrl() {
         if(!filter_var($_POST['u'], FILTER_VALIDATE_URL)) {
             writeLog('URL Validation');
-            die('Please insert a valid URL');
+            doError('Please insert a valid URL.');
         }
     }
 
@@ -91,7 +91,7 @@ LOG;
         $config = parse_ini_file(__DIR__.'/../../conf/viernes.ini');
         $con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
         if(!$con){
-            die("Failed to connect to Database");
+            doError("Failed to connect to Database");
         }
         return $con;
     }

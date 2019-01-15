@@ -15,9 +15,8 @@
         }
         // send email
     } else {
-        echo "Hack-Attempt detected. Got ya!.";
         writeLog('form_registro');
-        die();
+        doError("Hack-Attempt detected. Got ya!.");
     }
 
 ?>
