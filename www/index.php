@@ -132,7 +132,7 @@
                                     </header>
 
                                     <!-- Form -->
-                                        <form id="form_login" method="post" action="identificado.html" class="alt">
+                                        <form id="form_login" method="post" action="perfil.php" class="alt">
                                             <input type="hidden" name="token" value="<?php echo $token_login; ?>">
                                             <input type="hidden" name="u" value="">
                                             <div class="row uniform">
