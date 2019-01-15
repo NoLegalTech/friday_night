@@ -6,13 +6,12 @@
         verifyPostData(array('token', 'email', 'pass', 'confirm-vote', 'u'));
         verifyEmail();
         verifyUrl();
-        $db = db_connect();
-        $rows = db_query($db, 'SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '"');
+        $rows = db_query('SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '"');
         if (count($rows) > 0) {
             doError('El email introducido corresponde a un usuario ya registrado y por tanto no se puede registrar de nuevo.');
         }
         $token_activation = getRandomToken();
-        if (db_insert($db, 'INSERT INTO usuario(email, password, activation_token) VALUES ("' . $_POST['email'] . '", "' . $_POST['pass'] . '", "' . $token_activation . '")') === true) {
+        if (db_insert('INSERT INTO usuario(email, password, activation_token) VALUES ("' . $_POST['email'] . '", "' . $_POST['pass'] . '", "' . $token_activation . '")') === true) {
             // send email
         } else {
             doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
@@ -75,6 +74,4 @@
     </body>
 </html>
 
-<?php
-    db_close();
-?>
+<?php page_close(); ?>

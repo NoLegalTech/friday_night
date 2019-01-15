@@ -9,8 +9,7 @@
             verifyPostData(array('token', 'email', 'pass', 'u'));
             verifyEmail();
             verifyUrl();
-            $db = db_connect();
-            $rows = db_query($db, 'SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '" AND password = "' . $_POST['pass'] . '" AND activation_token IS NULL');
+            $rows = db_query('SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '" AND password = "' . $_POST['pass'] . '" AND activation_token IS NULL');
             if (count($rows) != 1) {
                 doError('Login incorrecto.');
             }
@@ -205,6 +204,4 @@
     </body>
 </html>
 
-<?php
-    db_close();
-?>
+<?php page_close(); ?>

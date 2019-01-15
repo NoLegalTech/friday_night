@@ -117,7 +117,9 @@ LOG;
         return $con;
     }
 
-    function db_query($db, $sql) {
+    function db_query($sql) {
+        global $db;
+
         $result = $db->query($sql);
 
         $rows = [];
@@ -130,15 +132,21 @@ LOG;
         return $rows;
     }
 
-    function db_insert($db, $sql) {
+    function db_insert($sql) {
+        global $db;
+
         return $db->query($sql);
     }
 
-    function db_update($db, $sql) {
+    function db_update($sql) {
+        global $db;
+
         return $db->query($sql);
     }
 
-    function db_close($db) {
+    function db_close() {
+        global $db;
+
         $db->close();
     }
 
@@ -149,7 +157,7 @@ LOG;
             "presentacion"  => "Presentación"
         );
         if (isset($_SESSION['usuario'])) {
-            $menu_options['perfil'] = 'Mi perfil';
+            $menu_options['perfil'] = 'Mis datos';
             $menu_options['logout'] = 'Cerrar sesión';
         }
         echo '<!DOCTYPE HTML>';
@@ -203,4 +211,9 @@ LOG;
     }
 
     function page_close() {
+        db_close();
     }
+
+
+    $db = db_connect();
+

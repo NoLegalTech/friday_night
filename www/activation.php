@@ -2,12 +2,11 @@
 
     require_once(__DIR__.'/inc/functions.php');
 
-    $db = db_connect();
-    $rows = db_query($db, 'SELECT * FROM usuario WHERE activation_token = "' . $_GET['token'] . '"');
+    $rows = db_query('SELECT * FROM usuario WHERE activation_token = "' . $_GET['token'] . '"');
     if (count($rows) != 1) {
         doError('Token no válido.');
     }
-    if (db_update($db, 'UPDATE usuario SET activation_token = NULL WHERE activation_token = "' . $_GET['token'] . '"') === true) {
+    if (db_update('UPDATE usuario SET activation_token = NULL WHERE activation_token = "' . $_GET['token'] . '"') === true) {
         // nothing?
     } else {
         doError('Token no válido.');
@@ -57,6 +56,4 @@
     </body>
 </html>
 
-<?php
-    db_close();
-?>
+<?php page_close(); ?>

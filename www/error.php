@@ -57,5 +57,5 @@
 <?php
     unset($_SESSION['error']);
 
-    db_close();
+    page_close();
 ?>

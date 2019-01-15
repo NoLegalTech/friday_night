@@ -96,3 +96,5 @@
 
     </body>
 </html>
+
+<?php page_close(); ?>

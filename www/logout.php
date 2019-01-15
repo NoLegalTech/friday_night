@@ -6,4 +6,3 @@
     unset($_SESSION['error']);
     redirect('index');
 
-?>
