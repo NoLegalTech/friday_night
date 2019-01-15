@@ -212,6 +212,32 @@ LOG;
 
     function page_close() {
         db_close();
+        echo '                <!-- Footer -->';
+        echo '                    <footer id="footer">';
+        echo '                    </footer>';
+        echo '';
+        echo '                <!-- Copyright -->';
+        echo '                    <div id="copyright">';
+        echo '                        <ul>';
+        echo '                            <li>&copy; <a target="_blank" href="https://secuoyagroup.com/">Secuoya Group</a></li>';
+        echo '                            <li>Design: <a target="_blank" href="https://html5up.net">HTML5 UP</a></li>';
+        echo '                            <li>Distributor: <a target="_blank" href="https://themewagon.com">ThemeWagon</a></li>';
+        echo '                        </ul>';
+        echo '                    </div>';
+        echo '';
+        echo '            </div>';
+        echo '';
+        echo '        <!-- Scripts -->';
+        echo '            <script src="assets/js/jquery.min.js"></script>';
+        echo '            <script src="assets/js/jquery.scrollex.min.js"></script>';
+        echo '            <script src="assets/js/jquery.scrolly.min.js"></script>';
+        echo '            <script src="assets/js/skel.min.js"></script>';
+        echo '            <script src="assets/js/util.js"></script>';
+        echo '            <script src="assets/js/crypto-js.js"></script>';
+        echo '            <script src="assets/js/main.js"></script>';
+        echo '';
+        echo '    </body>';
+        echo '</html>';
     }
 
 
