@@ -207,11 +207,13 @@ LOG;
         echo '                    </nav>';
         echo '';
         echo '                <!-- Main -->';
-        echo '                    <div id="main">';
+        echo '                <div id="main">';
     }
 
     function page_close() {
         db_close();
+        echo '                </div>';
+        echo '';
         echo '                <!-- Footer -->';
         echo '                    <footer id="footer">';
         echo '                    </footer>';
