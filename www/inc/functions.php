@@ -242,6 +242,40 @@ LOG;
         echo '</html>';
     }
 
+    function user_login() {
+        if (!isset($_SESSION['usuario'])) {
+            if (verifyFormToken('form_login')) {
+                verifyPostData(array('token', 'email', 'pass', 'u'));
+                verifyEmail();
+                verifyUrl();
+                $rows = db_query('SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '" AND password = "' . $_POST['pass'] . '" AND activation_token IS NULL');
+                if (count($rows) != 1) {
+                    doError('Login incorrecto.');
+                }
+                $usuario = $rows[0];
+                $_SESSION['usuario'] = $usuario;
+            } else {
+                writeLog('form_login');
+                doError("Hack-Attempt detected. Got ya!.");
+            }
+        }
+    }
+
+    function user_logout() {
+        unset($_SESSION['usuario']);
+        unset($_SESSION['error']);
+    }
+
+    function user_get_logged_user() {
+        return $_SESSION['usuario'];
+    }
+
+    function this_page_is_private() {
+        if (!isset($_SESSION['usuario'])) {
+            doError("No tienes permiso para acceder a esta página.");
+        }
+    }
+
 
     $db = db_connect();
 

@@ -2,26 +2,10 @@
 
     require_once(__DIR__.'/inc/functions.php');
 
-    if (isset($_SESSION['usuario'])) {
-        $usuario = $_SESSION['usuario'];
-    } else {
-        if (verifyFormToken('form_login')) {
-            verifyPostData(array('token', 'email', 'pass', 'u'));
-            verifyEmail();
-            verifyUrl();
-            $rows = db_query('SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '" AND password = "' . $_POST['pass'] . '" AND activation_token IS NULL');
-            if (count($rows) != 1) {
-                doError('Login incorrecto.');
-            }
-            $usuario = $rows[0];
-            $_SESSION['usuario'] = $usuario;
-        } else {
-            writeLog('form_login');
-            doError("Hack-Attempt detected. Got ya!.");
-        }
-    }
+    this_page_is_private();
 
     $token_perfil = generateFormToken('form_perfil');
+    $usuario = user_get_logged_user();
 
     page_open();
 
