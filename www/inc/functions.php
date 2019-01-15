@@ -1,5 +1,7 @@
 <?php
 
+    session_start();
+
     function getRandomToken() {
         return md5(uniqid(microtime(), true));
     }
@@ -85,6 +87,17 @@ LOG;
         return substr($currentPage, 0, $pos) . '/'.$page.'.php';
     }
 
+    function getCurrentUrl() {
+        return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    }
+
+    function getCurrentUrlPage() {
+        $url = getCurrentUrl();
+        $end = strrpos($url, '.php');
+        $start = strrpos($url, '/');
+        return substr($url, $start + 1, $end - $start - 1);
+    }
+
     function doError($message) {
         $_SESSION['error'] = $message;
         header('Location: '. getPage('error'));
@@ -125,3 +138,65 @@ LOG;
         $db->close();
     }
 
+    function page_open() {
+        $menu_options = array(
+            "index"         => "Lista Viernes",
+            "faq"           => "FAQ",
+            "presentacion"  => "Presentación"
+        );
+        if (isset($_SESSION['usuario'])) {
+            $menu_options['perfil'] = 'Mi perfil';
+            $menu_options['logout'] = 'Cerrar sesión';
+        }
+        echo '<!DOCTYPE HTML>';
+        echo '<!--';
+        echo '    Massively by HTML5 UP';
+        echo '    html5up.net | @ajlkn';
+        echo '    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)';
+        echo '-->';
+        echo '<html>';
+        echo '    <head>';
+        echo '        <title>Lista Viernes</title>';
+        echo '        <meta charset="utf-8" />';
+        echo '        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />';
+        echo '        <link rel="stylesheet" href="assets/css/main.css" />';
+        echo '        <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>';
+        echo '    </head>';
+        echo '    <body class="is-loading">';
+        echo '';
+        echo '        <!-- Wrapper -->';
+        echo '            <div id="wrapper">';
+        echo '';
+        echo '                <!-- Header -->';
+        echo '                    <header id="header">';
+        echo '                        <a href="index.php" class="logo">Lista viernes</a>';
+        echo '                    </header>';
+        echo '';
+        echo '                <!-- Nav -->';
+        echo '                    <nav id="nav">';
+        echo '                        <ul class="links">';
+        $currentPage = getCurrentUrlPage();
+        foreach ($menu_options as $page => $text) {
+            if ($page == $currentPage) {
+                echo '                            <li class="active"><a href="' .
+                    $page . '.php">' . $text . '</a></li>';
+            } else {
+                echo '                            <li><a href="' .
+                    $page . '.php">' . $text . '</a></li>';
+            }
+        }
+        echo '                        </ul>';
+        echo '                        <ul class="icons">';
+        echo '                            <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>';
+        echo '                            <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>';
+        echo '                            <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>';
+        echo '                            <li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>';
+        echo '                        </ul>';
+        echo '                    </nav>';
+        echo '';
+        echo '                <!-- Main -->';
+        echo '                    <div id="main">';
+    }
+
+    function page_close() {
+    }
