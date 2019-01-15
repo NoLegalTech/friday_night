@@ -1,7 +1,11 @@
 <?php
 
+    function getRandomToken() {
+        return md5(uniqid(microtime(), true));
+    }
+
     function generateFormToken($form) {
-        $token = md5(uniqid(microtime(), true));
+        $token = getRandomToken();
         $_SESSION[$form.'_token'] = $token;
         return $token;
     }
@@ -75,15 +79,15 @@ LOG;
         }
     }
 
-    function getErrorPage() {
+    function getPage($page) {
         $currentPage = $_POST['u'];
         $pos = strrpos($currentPage, '/');
-        return substr($currentPage, 0, $pos) . '/error.php';
+        return substr($currentPage, 0, $pos) . '/'.$page.'.php';
     }
 
     function doError($message) {
         $_SESSION['error'] = $message;
-        header('Location: '. getErrorPage());
+        header('Location: '. getPage('error'));
         die();
     }
 
@@ -107,6 +111,10 @@ LOG;
         }
 
         return $rows;
+    }
+
+    function db_insert($db, $sql) {
+        return $db->query($sql);
     }
 
     function db_close($db) {

@@ -13,7 +13,12 @@
         if (count($rows) > 0) {
             doError('El email introducido corresponde a un usuario ya registrado y por tanto no se puede registrar de nuevo.');
         }
-        // send email
+        $token_activation = getRandomToken();
+        if (db_insert($db, 'INSERT INTO usuario(email, activation_token) VALUES ("' . $_POST['email'] . '", "' . $token_activation . '")') === true) {
+            // send email
+        } else {
+            doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
+        }
     } else {
         writeLog('form_registro');
         doError("Hack-Attempt detected. Got ya!.");
@@ -71,7 +76,15 @@
 
 
                                 <h4>Comprueba tu correo para activar tu cuenta</h4>
-                                <p>Comprueba tu bandeja de entrada en p******u@gmail.com, donde te hemos enviado un correo con un enlace para activar tu cuenta.</p>
+                                <p>Comprueba tu bandeja de entrada en <?php echo $_POST['email']; ?>, donde te hemos enviado un correo con un enlace para activar tu cuenta.</p>
+
+                                <p style="text-color: red">
+                                    Como esto es un prototipo y no manda emails aquí tienes el link:
+                                </p>
+
+                                <a href="<?php echo getPage('activation') . '?token=' . $token_activation; ?>">
+                                    <?php echo getPage('activation') . '?token=' . $token_activation; ?>
+                                </a>
 
                             </section>
 
