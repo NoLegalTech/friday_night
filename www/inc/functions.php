@@ -25,6 +25,13 @@
         return true;
     }
 
+    function logLine($line) {
+        if ($handle = fopen('hacklog.log', 'a')) {
+            fputs($handle, "\n << LOG >> $line\n\n");
+            fclose($handle);
+        };
+    }
+
     function writeLog($where) {
         $ip = $_SERVER["REMOTE_ADDR"]; // Get the IP from superglobal
         $host = gethostbyaddr($ip);    // Try to locate the host of the attack
@@ -140,6 +147,8 @@ LOG;
 
     function db_update($sql) {
         global $db;
+
+        logLine($sql);
 
         return $db->query($sql);
     }
@@ -267,6 +276,20 @@ LOG;
     }
 
     function user_get_logged_user() {
+        return $_SESSION['usuario'];
+    }
+
+    function user_update_logged_user() {
+        $usuario = $_SESSION['usuario'];
+        $usuario['nombre']                     = $_POST['nombre'];
+        $usuario['apellidos']                  = $_POST['apellidos'];
+        $usuario['dni']                        = $_POST['dni'];
+        $usuario['cp']                         = $_POST['cp'];
+        $usuario['oposicion_ideologia']        = ( $_POST['oposicion_ideologia'] == 'on' ? 1 : 0 );
+        $usuario['oposicion_propaganda_fijo']  = ( $_POST['oposicion_propaganda_fijo'] == 'on' ? 1 : 0 );
+        $usuario['oposicion_propaganda_movil'] = ( $_POST['oposicion_propaganda_movil'] == 'on' ? 1 : 0 );
+        $usuario['oposicion_propaganda_email'] = ( $_POST['oposicion_propaganda_email'] == 'on' ? 1 : 0 );
+        $_SESSION['usuario'] = $usuario;
         return $_SESSION['usuario'];
     }
 
