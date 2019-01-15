@@ -117,6 +117,10 @@ LOG;
         return $db->query($sql);
     }
 
+    function db_update($db, $sql) {
+        return $db->query($sql);
+    }
+
     function db_close($db) {
         $db->close();
     }

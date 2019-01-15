@@ -4,24 +4,15 @@
 
     require_once(__DIR__.'/inc/functions.php');
 
-    if (verifyFormToken('form_registro')) {
-        verifyPostData(array('token', 'email', 'confirm-vote', 'u'));
-        verifyEmail();
-        verifyUrl();
-        $db = db_connect();
-        $rows = db_query($db, 'SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '"');
-        if (count($rows) > 0) {
-            doError('El email introducido corresponde a un usuario ya registrado y por tanto no se puede registrar de nuevo.');
-        }
-        $token_activation = getRandomToken();
-        if (db_insert($db, 'INSERT INTO usuario(email, activation_token) VALUES ("' . $_POST['email'] . '", "' . $token_activation . '")') === true) {
-            // send email
-        } else {
-            doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
-        }
+    $db = db_connect();
+    $rows = db_query($db, 'SELECT * FROM usuario WHERE activation_token = "' . $_GET['token'] . '"');
+    if (count($rows) != 1) {
+        doError('Token no válido.');
+    }
+    if (db_update($db, 'UPDATE usuario SET activation_token = NULL WHERE activation_token = "' . $_GET['token'] . '"') === true) {
+        // nothing?
     } else {
-        writeLog('form_registro');
-        doError("Hack-Attempt detected. Got ya!.");
+        doError('Token no válido.');
     }
 
 ?>
@@ -75,16 +66,7 @@
                                 </header>
 
 
-                                <h4>Comprueba tu correo para activar tu cuenta</h4>
-                                <p>Comprueba tu bandeja de entrada en <?php echo $_POST['email']; ?>, donde te hemos enviado un correo con un enlace para activar tu cuenta.</p>
-
-                                <p style="color: red">
-                                    Como esto es un prototipo y no manda emails aquí tienes el link:
-                                </p>
-
-                                <a style="color: red" href="<?php echo getPage('activation') . '?token=' . $token_activation; ?>">
-                                    <?php echo getPage('activation') . '?token=' . $token_activation; ?>
-                                </a>
+                                <p>Tu cuenta ha sido activada con éxito. Vuelve a la página principal para identificarte.</p>
 
                             </section>
 
