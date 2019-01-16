@@ -300,6 +300,8 @@ LOG;
     }
 
     function user_register() {
+        global $db;
+
         if (verifyFormToken('form_registro')) {
             verifyPostData(array('token', 'email', 'pass', 'confirm-vote', 'u'));
             verifyEmail();
@@ -327,6 +329,16 @@ LOG;
             doError("Hack-Attempt detected. Got ya!.");
         }
         return $token_activation;
+    }
+
+    function user_get_emails() {
+        $usuario = user_get_logged_user();
+        return db_query('SELECT id, email FROM email WHERE id_usuario = "' . $usuario['id'] . '"');
+    }
+
+    function user_get_tfnos() {
+        $usuario = user_get_logged_user();
+        return db_query('SELECT id, telefono FROM telefono WHERE id_usuario = "' . $usuario['id'] . '"');
     }
 
 

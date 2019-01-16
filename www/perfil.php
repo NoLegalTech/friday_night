@@ -5,6 +5,8 @@
     this_page_is_private();
 
     $usuario = user_get_logged_user();
+    $emails  = user_get_emails();
+    $tfnos   = user_get_tfnos();
 
     if (isset($_POST['nombre'])) {
         if (verifyFormToken('form_perfil')) {
@@ -121,14 +123,18 @@
             <hr/>
 
             <div class="row">
-                <div class="4u 12u$(small)">
+                <div class="6u 12u$(small)">
                     <ul class="actions vertical">
-                        <li>p******u@gmail.com</li>
+                        <?php foreach($emails as $email) { ?>
+                            <li><?php echo $email['email']; ?></li>
+                        <?php } ?>
                     </ul>
                 </div>
                 <div class="6u 12u$(small)">
                     <ul class="actions vertical small">
-                        <li><a href="#" class="button special small">Borrar</a></li>
+                        <?php foreach($emails as $email) { ?>
+                            <li><a href="#" class="button special small">Borrar</a></li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
@@ -153,16 +159,18 @@
             <hr/>
 
             <div class="row">
-                <div class="4u 12u$(small)">
+                <div class="6u 12u$(small)">
                     <ul class="actions vertical">
-                        <li>65******6</li>
-                        <li>88******7</li>
+                        <?php foreach($tfnos as $telefono) { ?>
+                            <li><?php echo $telefono['telefono']; ?></li>
+                        <?php } ?>
                     </ul>
                 </div>
                 <div class="6u 12u$(small)">
                     <ul class="actions vertical small">
-                        <li><a href="#" class="button special small">Borrar</a></li>
-                        <li><a href="#" class="button special small">Borrar</a></li>
+                        <?php foreach($tfnos as $telefono) { ?>
+                            <li><a href="#" class="button special small">Borrar</a></li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
