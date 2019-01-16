@@ -148,7 +148,11 @@ LOG;
     function db_update($sql) {
         global $db;
 
-        logLine($sql);
+        return $db->query($sql);
+    }
+
+    function db_delete($sql) {
+        global $db;
 
         return $db->query($sql);
     }
@@ -333,12 +337,12 @@ LOG;
 
     function user_get_emails() {
         $usuario = user_get_logged_user();
-        return db_query('SELECT id, email FROM email WHERE id_usuario = "' . $usuario['id'] . '"');
+        return db_query('SELECT id, email, id_usuario FROM email WHERE id_usuario = "' . $usuario['id'] . '"');
     }
 
     function user_get_tfnos() {
         $usuario = user_get_logged_user();
-        return db_query('SELECT id, telefono FROM telefono WHERE id_usuario = "' . $usuario['id'] . '"');
+        return db_query('SELECT id, telefono, id_usuario FROM telefono WHERE id_usuario = "' . $usuario['id'] . '"');
     }
 
 
