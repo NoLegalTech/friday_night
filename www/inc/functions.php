@@ -115,8 +115,13 @@ LOG;
         redirect('error');
     }
 
+    function config_read() {
+        return parse_ini_file(__DIR__.'/../../conf/viernes.ini');
+    }
+
     function db_connect() {
-        $config = parse_ini_file(__DIR__.'/../../conf/viernes.ini');
+        global $config;
+
         $con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
         if(!$con){
             doError("Failed to connect to Database");
@@ -256,15 +261,18 @@ LOG;
     }
 
     function user_login() {
+        global $config;
+
         if (!isset($_SESSION['usuario'])) {
             if (verifyFormToken('form_login')) {
                 verifyPostData(array('token', 'email', 'pass', 'u'));
                 verifyEmail();
                 verifyUrl();
-                $rows = db_query('SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '" AND password = "' . $_POST['pass'] . '" AND activation_token IS NULL');
+                $rows = db_query('SELECT * FROM ' . $config['tables.user'] . ' WHERE email = "' . $_POST['email'] . '" AND password = "' . $_POST['pass'] . '" AND activation_token IS NULL');
                 if (count($rows) != 1) {
                     doError('Login incorrecto.');
                 }
+
                 $usuario = $rows[0];
                 $_SESSION['usuario'] = $usuario;
             } else {
@@ -305,22 +313,23 @@ LOG;
 
     function user_register() {
         global $db;
+        global $config;
 
         if (verifyFormToken('form_registro')) {
             verifyPostData(array('token', 'email', 'pass', 'confirm-vote', 'u'));
             verifyEmail();
             verifyUrl();
-            $rows = db_query('SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '"');
+            $rows = db_query('SELECT * FROM ' . $config['tables.user'] . ' WHERE email = "' . $_POST['email'] . '"');
             if (count($rows) > 0) {
                 doError('El email introducido corresponde a un usuario ya registrado y por tanto no se puede registrar de nuevo.');
             }
             $token_activation = getRandomToken();
-            if (db_insert('INSERT INTO usuario(email, password, activation_token) VALUES ("' . $_POST['email'] . '", "' . $_POST['pass'] . '", "' . $token_activation . '")') === true) {
-                $rows = db_query('SELECT * FROM usuario WHERE email = "' . $_POST['email'] . '"');
+            if (db_insert('INSERT INTO ' . $config['tables.user'] . '(email, password, activation_token) VALUES ("' . $_POST['email'] . '", "' . $_POST['pass'] . '", "' . $token_activation . '")') === true) {
+                $rows = db_query('SELECT * FROM ' . $config['tables.user'] . ' WHERE email = "' . $_POST['email'] . '"');
                 if (count($rows) != 1) {
                     doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
                 }
-                if (db_insert('INSERT INTO email(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $rows[0]['id'] . ')') === true) {
+                if (db_insert('INSERT INTO ' . $config['tables.email'] . '(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $rows[0]['id'] . ')') === true) {
                     // send email
                 } else {
                     doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
@@ -335,16 +344,177 @@ LOG;
         return $token_activation;
     }
 
+    function user_activate() {
+        global $db;
+        global $config;
+
+        $rows = db_query('SELECT * FROM ' . $config['tables.user'] . ' WHERE activation_token = "' . $_GET['token'] . '"');
+        if (count($rows) != 1) {
+            doError('Token no válido.');
+        }
+        if (db_update('UPDATE ' . $config['tables.user'] . ' SET activation_token = NULL WHERE activation_token = "' . $_GET['token'] . '"') === true) {
+            // nothing?
+        } else {
+            doError('Token no válido.');
+        }
+    }
+
     function user_get_emails() {
+        global $config;
+
         $usuario = user_get_logged_user();
-        return db_query('SELECT id, email, id_usuario FROM email WHERE id_usuario = "' . $usuario['id'] . '"');
+        return db_query('SELECT id, email, id_usuario FROM ' . $config['tables.email'] . ' WHERE id_usuario = "' . $usuario['id'] . '"');
     }
 
     function user_get_tfnos() {
+        global $config;
+
         $usuario = user_get_logged_user();
-        return db_query('SELECT id, telefono, id_usuario FROM telefono WHERE id_usuario = "' . $usuario['id'] . '"');
+        return db_query('SELECT id, telefono, id_usuario FROM ' . $config['tables.phone'] . ' WHERE id_usuario = "' . $usuario['id'] . '"');
     }
 
+    function perfil_delete_email() {
+        global $db;
+        global $config;
 
+        if (verifyFormToken('form_delete_email_' . $_POST['id_email'])) {
+            verifyPostData(array(
+                'action', 'token', 'u',
+                'id_email'
+            ));
+            verifyUrl();
+            if (db_delete('DELETE FROM ' . $config['tables.email'] . ' WHERE id = ' . $_POST['id_email'])) {
+                // all good
+                $emails = user_get_emails();
+            } else {
+                doError('Se produjo un error inesperado al intentar borrar el email: <pre>' . $db->error . '</pre>');
+            }
+        } else {
+            writeLog('form_delete_email_' . $_POST['id_email']);
+            doError("Hack-Attempt detected. Got ya!.");
+        }
+
+        return $emails;
+    }
+
+    function perfil_delete_tfno() {
+        global $db;
+        global $config;
+
+        if (verifyFormToken('form_delete_tfno_' . $_POST['id_tfno'])) {
+            verifyPostData(array(
+                'action', 'token', 'u',
+                'id_tfno'
+            ));
+            verifyUrl();
+            if (db_delete('DELETE FROM ' . $config['tables.phone'] . ' WHERE id = ' . $_POST['id_tfno'])) {
+                // all good
+                $tfnos = user_get_tfnos();
+            } else {
+                doError('Se produjo un error inesperado al intentar borrar el teléfono: <pre>' . $db->error . '</pre>');
+            }
+        } else {
+            writeLog('form_delete_tfno_' . $_POST['id_tfno']);
+            doError("Hack-Attempt detected. Got ya!.");
+        }
+
+        return $tfnos;
+    }
+
+    function perfil_add_email() {
+        global $db;
+        global $config;
+
+        $usuario = user_get_logged_user();
+        if (verifyFormToken('form_add_email')) {
+            verifyPostData(array(
+                'action', 'token', 'u',
+                'email'
+            ));
+            verifyUrl();
+
+            $sql = 'INSERT INTO ' . $config['tables.email'] . '(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $usuario['id'] . ')';
+
+            if (db_insert($sql)) {
+                // all good
+                $emails = user_get_emails();
+            } else {
+                logLine($sql);
+                doError('Se produjo un error inesperado al intentar añadir el correo: <pre>' . $db->error . '</pre>');
+            }
+        } else {
+            writeLog('form_add_email');
+            doError("Hack-Attempt detected. Got ya!.");
+        }
+
+        return $emails;
+    }
+
+    function perfil_add_tfno() {
+        global $db;
+        global $config;
+
+        $usuario = user_get_logged_user();
+        if (verifyFormToken('form_add_tfno')) {
+            verifyPostData(array(
+                'action', 'token', 'u',
+                'telefono'
+            ));
+            verifyUrl();
+            if (db_insert('INSERT INTO ' . $config['tables.phone'] . '(telefono, id_usuario) VALUES ("' . $_POST['telefono'] . '", ' . $usuario['id'] . ')')) {
+                // all good
+                $tfnos = user_get_tfnos();
+            } else {
+                doError('Se produjo un error inesperado al intentar añadir el teléfono: <pre>' . $db->error . '</pre>');
+            }
+        } else {
+            writeLog('form_add_tfno');
+            doError("Hack-Attempt detected. Got ya!.");
+        }
+
+        return $tfnos;
+    }
+
+    function perfil_update() {
+        global $db;
+        global $config;
+
+        $usuario = user_get_logged_user();
+        if (verifyFormToken('form_perfil')) {
+            verifyPostData(array(
+                'action', 'token', 'u',
+                'nombre', 'apellidos', 'dni', 'cp',
+                'oposicion_ideologia',
+                'oposicion_propaganda_fijo',
+                'oposicion_propaganda_movil',
+                'oposicion_propaganda_email'
+            ));
+            verifyUrl();
+            if (db_update(
+                'UPDATE ' . $config['tables.user'] . ' SET '
+                . 'nombre     = "' . $_POST['nombre'] .'", '
+                . 'apellidos  = "' . $_POST['apellidos'] .'", '
+                . 'dni        = "' . $_POST['dni'] .'", '
+                . 'cp         = "' . $_POST['cp'] .'", '
+                . 'oposicion_ideologia        = "' . ( $_POST['oposicion_ideologia'] == 'on' ? 1 : 0 ) .'", '
+                . 'oposicion_propaganda_fijo  = "' . ( $_POST['oposicion_propaganda_fijo'] == 'on' ? 1 : 0 ) .'", '
+                . 'oposicion_propaganda_movil = "' . ( $_POST['oposicion_propaganda_movil'] == 'on' ? 1 : 0 ) .'", '
+                . 'oposicion_propaganda_email = "' . ( $_POST['oposicion_propaganda_email'] == 'on' ? 1 : 0 ) .'" '
+                . ' WHERE email = "' . $usuario['email'] . '"'
+            ) === true) {
+                // all good
+                $usuario = user_update_logged_user();
+            } else {
+                doError('Se produjo un error inesperado al intentar actualizar los datos: <pre>' . $db->error . '</pre>');
+            }
+        } else {
+            writeLog('form_perfil');
+            doError("Hack-Attempt detected. Got ya!.");
+        }
+
+        return $usuario;
+    }
+
+    $config = config_read();
     $db = db_connect();
 

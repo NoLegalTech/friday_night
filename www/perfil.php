@@ -11,109 +11,19 @@
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
         case 'delete_email':
-            if (verifyFormToken('form_delete_email_' . $_POST['id_email'])) {
-                verifyPostData(array(
-                    'action', 'token', 'u',
-                    'id_email'
-                ));
-                verifyUrl();
-                if (db_delete('DELETE FROM email WHERE id = ' . $_POST['id_email'])) {
-                    // all good
-                    $emails = user_get_emails();
-                } else {
-                    doError('Se produjo un error inesperado al intentar borrar el email: <pre>' . $db->error . '</pre>');
-                }
-            } else {
-                writeLog('form_delete_email_' . $_POST['id_email']);
-                doError("Hack-Attempt detected. Got ya!.");
-            }
+            $emails = perfil_delete_email();
             break;
         case 'delete_tfno':
-            if (verifyFormToken('form_delete_tfno_' . $_POST['id_tfno'])) {
-                verifyPostData(array(
-                    'action', 'token', 'u',
-                    'id_tfno'
-                ));
-                verifyUrl();
-                if (db_delete('DELETE FROM telefono WHERE id = ' . $_POST['id_tfno'])) {
-                    // all good
-                    $tfnos = user_get_tfnos();
-                } else {
-                    doError('Se produjo un error inesperado al intentar borrar el teléfono: <pre>' . $db->error . '</pre>');
-                }
-            } else {
-                writeLog('form_delete_tfno_' . $_POST['id_tfno']);
-                doError("Hack-Attempt detected. Got ya!.");
-            }
+            $tfnos = perfil_delete_tfno();
             break;
         case 'add_email':
-            if (verifyFormToken('form_add_email')) {
-                verifyPostData(array(
-                    'action', 'token', 'u',
-                    'email'
-                ));
-                verifyUrl();
-                if (db_insert('INSERT INTO email(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $usuario['id'] . ')')) {
-                    // all good
-                    $emails = user_get_emails();
-                } else {
-                    doError('Se produjo un error inesperado al intentar añadir el correo: <pre>' . $db->error . '</pre>');
-                }
-            } else {
-                writeLog('form_add_email');
-                doError("Hack-Attempt detected. Got ya!.");
-            }
+            $emails = perfil_add_email();
             break;
         case 'add_tfno':
-            if (verifyFormToken('form_add_tfno')) {
-                verifyPostData(array(
-                    'action', 'token', 'u',
-                    'telefono'
-                ));
-                verifyUrl();
-                if (db_insert('INSERT INTO telefono(telefono, id_usuario) VALUES ("' . $_POST['telefono'] . '", ' . $usuario['id'] . ')')) {
-                    // all good
-                    $tfnos = user_get_tfnos();
-                } else {
-                    doError('Se produjo un error inesperado al intentar añadir el teléfono: <pre>' . $db->error . '</pre>');
-                }
-            } else {
-                writeLog('form_add_tfno');
-                doError("Hack-Attempt detected. Got ya!.");
-            }
+            $tfnos = perfil_add_tfno();
             break;
         case 'update_profile':
-            if (verifyFormToken('form_perfil')) {
-                verifyPostData(array(
-                    'action', 'token', 'u',
-                    'nombre', 'apellidos', 'dni', 'cp',
-                    'oposicion_ideologia',
-                    'oposicion_propaganda_fijo',
-                    'oposicion_propaganda_movil',
-                    'oposicion_propaganda_email'
-                ));
-                verifyUrl();
-                if (db_update(
-                    'UPDATE usuario SET '
-                    . 'nombre     = "' . $_POST['nombre'] .'", '
-                    . 'apellidos  = "' . $_POST['apellidos'] .'", '
-                    . 'dni        = "' . $_POST['dni'] .'", '
-                    . 'cp         = "' . $_POST['cp'] .'", '
-                    . 'oposicion_ideologia        = "' . ( $_POST['oposicion_ideologia'] == 'on' ? 1 : 0 ) .'", '
-                    . 'oposicion_propaganda_fijo  = "' . ( $_POST['oposicion_propaganda_fijo'] == 'on' ? 1 : 0 ) .'", '
-                    . 'oposicion_propaganda_movil = "' . ( $_POST['oposicion_propaganda_movil'] == 'on' ? 1 : 0 ) .'", '
-                    . 'oposicion_propaganda_email = "' . ( $_POST['oposicion_propaganda_email'] == 'on' ? 1 : 0 ) .'" '
-                    . ' WHERE email = "' . $usuario['email'] . '"'
-                ) === true) {
-                    // all good
-                    $usuario = user_update_logged_user();
-                } else {
-                    doError('Se produjo un error inesperado al intentar actualizar los datos: <pre>' . $db->error . '</pre>');
-                }
-            } else {
-                writeLog('form_perfil');
-                doError("Hack-Attempt detected. Got ya!.");
-            }
+            $usuario = perfil_update();
             break;
         }
 
