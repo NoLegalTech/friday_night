@@ -199,7 +199,7 @@ LOG;
         echo '';
         echo '                <!-- Header -->';
         echo '                    <header id="header">';
-        echo '                        <a href="index.php" class="logo">Lista viernes</a>';
+        echo '                        <a href="index.php" class="logo"><img src="images/logo.png" /></a>';
         echo '                    </header>';
         echo '';
         echo '                <!-- Nav -->';
