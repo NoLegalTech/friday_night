@@ -37,6 +37,7 @@
         $host = gethostbyaddr($ip);    // Try to locate the host of the attack
         $date = date("d M Y");
         $postData = str_replace("\n", "\n            ", print_r($_POST, true));
+        $sessionData = str_replace("\n", "\n            ", print_r($_SESSION, true));
 
         $logging = <<<LOG
         \n
@@ -47,6 +48,7 @@
             Host of Attacker: {$host}
             Point of Attack: {$where}
             Post Data: {$postData}
+            Session Data: {$sessionData}
         << End of Message >>
 
 LOG;
