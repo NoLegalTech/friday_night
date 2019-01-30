@@ -122,7 +122,7 @@ LOG;
     function db_connect() {
         global $config;
 
-        $con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
+        $con = mysqli_connect($config['host'],$config['username'],$config['password'],$config['db']);
         if(!$con){
             doError("Failed to connect to Database");
         }
