@@ -6,6 +6,28 @@
 
 (function($) {
 
+    $('input[name=u]').val(window.location.href);
+
+    $('form#form_registro').on('submit', function(e) {
+        if (!$(this).data('encoded')) {
+            e.preventDefault();
+            var password = $('form#form_registro input[name=pass]').val();
+            $('form#form_registro input[name=pass]').val(CryptoJS.SHA3(password, { outputLength: 128 }));
+            $(this).data('encoded', true);
+            $(this).submit();
+        }
+    });
+
+    $('form#form_login').on('submit', function(e) {
+        if (!$(this).data('encoded')) {
+            e.preventDefault();
+            var password = $('form#form_login input[name=pass]').val();
+            $('form#form_login input[name=pass]').val(CryptoJS.SHA3(password, { outputLength: 128 }));
+            $(this).data('encoded', true);
+            $(this).submit();
+        }
+    });
+
     skel.breakpoints({
         xlarge: '(max-width: 1680px)',
         large:  '(max-width: 1280px)',
