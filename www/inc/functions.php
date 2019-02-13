@@ -313,37 +313,54 @@ LOG;
         }
     }
 
-    function user_register() {
+    function register($postDataFields, $dbTable) {
         global $db;
         global $config;
 
         if (verifyFormToken('form_registro')) {
-            verifyPostData(array('token', 'email', 'pass', 'confirm-vote', 'u'));
+            verifyPostData($postDataFields);
             verifyEmail();
             verifyUrl();
-            $rows = db_query('SELECT * FROM ' . $config['tables.user'] . ' WHERE email = "' . $_POST['email'] . '"');
+            $rows = db_query('SELECT * FROM ' . $dbTable . ' WHERE email = "' . $_POST['email'] . '"');
             if (count($rows) > 0) {
                 doError('El email introducido corresponde a un usuario ya registrado y por tanto no se puede registrar de nuevo.');
             }
             $token_activation = getRandomToken();
-            if (db_insert('INSERT INTO ' . $config['tables.user'] . '(email, password, activation_token) VALUES ("' . $_POST['email'] . '", "' . $_POST['pass'] . '", "' . $token_activation . '")') === true) {
-                $rows = db_query('SELECT * FROM ' . $config['tables.user'] . ' WHERE email = "' . $_POST['email'] . '"');
-                if (count($rows) != 1) {
-                    doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
-                }
-                if (db_insert('INSERT INTO ' . $config['tables.email'] . '(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $rows[0]['id'] . ')') === true) {
-                    // send email
-                } else {
-                    doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
-                }
-            } else {
+            if (db_insert('INSERT INTO ' . $dbTable . '(email, password, activation_token) VALUES ("' . $_POST['email'] . '", "' . $_POST['pass'] . '", "' . $token_activation . '")') !== true) {
                 doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
             }
         } else {
             writeLog('form_registro');
             doError("Hack-Attempt detected. Got ya!.");
         }
-        return $token_activation;
+
+        $rows = db_query('SELECT * FROM ' . $dbTable . ' WHERE email = "' . $_POST['email'] . '"');
+        if (count($rows) != 1) {
+            doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
+        }
+
+        return array(
+            'token' => $token_activation,
+            'user'  => $rows[0]
+        );
+    }
+
+    function user_register() {
+        global $db;
+        global $config;
+
+        $registered = register(
+            array('token', 'email', 'pass', 'confirm-vote', 'u'),
+            $config['tables.user']
+        );
+
+        if (db_insert('INSERT INTO ' . $config['tables.email'] . '(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $registered['user']['id'] . ')') === true) {
+            // send email
+        } else {
+            doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
+        }
+
+        return $registered['token'];
     }
 
     function user_activate() {
@@ -515,6 +532,20 @@ LOG;
         }
 
         return $usuario;
+    }
+
+    function party_register() {
+        global $db;
+        global $config;
+
+        $registered = register(
+            array('token', 'email', 'pass', 'u'),
+            $config['tables.party']
+        );
+
+        // send email
+
+        return $registered['token'];
     }
 
     $config = config_read();
