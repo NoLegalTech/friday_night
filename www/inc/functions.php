@@ -265,23 +265,7 @@ LOG;
     function user_login() {
         global $config;
 
-        if (!isset($_SESSION['usuario'])) {
-            if (verifyFormToken('form_login')) {
-                verifyPostData(array('token', 'email', 'pass', 'u'));
-                verifyEmail();
-                verifyUrl();
-                $rows = db_query('SELECT * FROM ' . $config['tables.user'] . ' WHERE email = "' . $_POST['email'] . '" AND password = "' . $_POST['pass'] . '" AND activation_token IS NULL');
-                if (count($rows) != 1) {
-                    doError('Login incorrecto.');
-                }
-
-                $usuario = $rows[0];
-                $_SESSION['usuario'] = $usuario;
-            } else {
-                writeLog('form_login');
-                doError("Hack-Attempt detected. Got ya!.");
-            }
-        }
+        login($config['tables.user'], 'user');
     }
 
     function user_logout() {
@@ -309,6 +293,13 @@ LOG;
 
     function this_page_is_private() {
         if (!isset($_SESSION['usuario'])) {
+            doError("No tienes permiso para acceder a esta página.");
+        }
+    }
+
+    function this_page_is_private_for($userType) {
+        this_page_is_private();
+        if (!isset($_SESSION['tipo_usuario']) || ($_SESSION['tipo_usuario'] != $userType)) {
             doError("No tienes permiso para acceder a esta página.");
         }
     }
@@ -343,6 +334,32 @@ LOG;
             'token' => $token_activation,
             'user'  => $rows[0]
         );
+    }
+
+    function login($dbTable, $userType, $only_activated = true) {
+        global $config;
+
+        $query = 'SELECT * FROM ' . $dbTable . ' WHERE email = "' . $_POST['email'] . '" AND password = "' . $_POST['pass'] . '"'
+           . ( $only_activated ? ' AND activation_token IS NULL' : '' );
+
+        if (!isset($_SESSION['usuario'])) {
+            if (verifyFormToken('form_login')) {
+                verifyPostData(array('token', 'email', 'pass', 'u'));
+                verifyEmail();
+                verifyUrl();
+                $rows = db_query($query);
+                if (count($rows) != 1) {
+                    doError('Login incorrecto.');
+                }
+
+                $usuario = $rows[0];
+                $_SESSION['usuario'] = $usuario;
+                $_SESSION['tipo_usuario'] = $userType;
+            } else {
+                writeLog('form_login');
+                doError("Hack-Attempt detected. Got ya!.");
+            }
+        }
     }
 
     function user_register() {
@@ -546,6 +563,18 @@ LOG;
         // send email
 
         return $registered['token'];
+    }
+
+    function party_login() {
+        global $config;
+
+        login($config['tables.party'], 'party', false);
+    }
+
+    function admin_login() {
+        global $config;
+
+        login($config['tables.admin'], 'admin', false);
     }
 
     $config = config_read();
