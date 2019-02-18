@@ -4,8 +4,11 @@ CREATE TABLE IF NOT EXISTS `partido` (
   `password` varchar(255) COLLATE utf8_unicode_ci NULL
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+INSERT INTO `partido` (`id`, `email`, `password`) VALUES
+(1, 'partido@listaviernes.es', 'a832706874838cf19b7a754c8d810d39'),
+
 ALTER TABLE `partido` ADD PRIMARY KEY (`id`);
-ALTER TABLE `partido` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+ALTER TABLE `partido` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 
 --
 

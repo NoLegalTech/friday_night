@@ -139,10 +139,11 @@
                     </ul>
                 </div>
             </div>
-            <form method="post" action="perfil.php" class="alt">
+            <form id="form_add_email" method="post" action="perfil.php" class="alt">
                 <input type="hidden" name="action" value="add_email">
                 <input type="hidden" name="token" value="<?php echo $token_add_email; ?>">
                 <input type="hidden" name="u" value="">
+                <input type="hidden" name="hash_email" value="">
                 <div class="row uniform">
                     <div class="10u$ 12u$(xsmall)">
                         <input type="email" name="email" id="add-email" value="" placeholder="Email" />
@@ -189,10 +190,11 @@
                     </ul>
                 </div>
             </div>
-            <form method="post" action="perfil.php" class="alt">
+            <form id="form_add_tfno" method="post" action="perfil.php" class="alt">
                 <input type="hidden" name="action" value="add_tfno">
                 <input type="hidden" name="token" value="<?php echo $token_add_tfno; ?>">
                 <input type="hidden" name="u" value="">
+                <input type="hidden" name="hash_tfno" value="">
                 <div class="row uniform">
                     <div class="8u$ 12u$(xsmall)">
                         <input type="text" name="telefono" id="add-telefono" value="" placeholder="Teléfono" />

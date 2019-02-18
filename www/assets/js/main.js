@@ -13,6 +13,8 @@
             e.preventDefault();
             var password = $('form#form_registro input[name=pass]').val();
             $('form#form_registro input[name=pass]').val(CryptoJS.SHA3(password, { outputLength: 128 }));
+            var email = $('form#form_registro input[name=email]').val();
+            $('form#form_registro input[name=hash_email]').val(CryptoJS.SHA3(email, { outputLength: 128 }));
             $(this).data('encoded', true);
             $(this).submit();
         }
@@ -23,6 +25,26 @@
             e.preventDefault();
             var password = $('form#form_login input[name=pass]').val();
             $('form#form_login input[name=pass]').val(CryptoJS.SHA3(password, { outputLength: 128 }));
+            $(this).data('encoded', true);
+            $(this).submit();
+        }
+    });
+
+    $('form#form_add_email').on('submit', function(e) {
+        if (!$(this).data('encoded')) {
+            e.preventDefault();
+            var email = $('form#form_add_email input[name=email]').val();
+            $('form#form_add_email input[name=hash_email]').val(CryptoJS.SHA3(email, { outputLength: 128 }));
+            $(this).data('encoded', true);
+            $(this).submit();
+        }
+    });
+
+    $('form#form_add_tfno').on('submit', function(e) {
+        if (!$(this).data('encoded')) {
+            e.preventDefault();
+            var tfno = $('form#form_add_tfno input[name=telefono]').val();
+            $('form#form_add_tfno input[name=hash_tfno]').val(CryptoJS.SHA3(tfno, { outputLength: 128 }));
             $(this).data('encoded', true);
             $(this).submit();
         }

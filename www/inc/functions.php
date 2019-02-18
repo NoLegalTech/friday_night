@@ -367,11 +367,11 @@ LOG;
         global $config;
 
         $registered = register(
-            array('token', 'email', 'pass', 'confirm-vote', 'u'),
+            array('token', 'email', 'hash_email', 'pass', 'confirm-vote', 'u'),
             $config['tables.user']
         );
 
-        if (db_insert('INSERT INTO ' . $config['tables.email'] . '(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $registered['user']['id'] . ')') === true) {
+        if (db_insert('INSERT INTO ' . $config['tables.email'] . '(email, hash, id_usuario) VALUES ("' . $_POST['email'] . '", "' . $_POST['hash_email'] . '", ' . $registered['user']['id'] . ')') === true) {
             // send email
         } else {
             doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
@@ -465,11 +465,11 @@ LOG;
         if (verifyFormToken('form_add_email')) {
             verifyPostData(array(
                 'action', 'token', 'u',
-                'email'
+                'email', 'hash_email'
             ));
             verifyUrl();
 
-            $sql = 'INSERT INTO ' . $config['tables.email'] . '(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $usuario['id'] . ')';
+            $sql = 'INSERT INTO ' . $config['tables.email'] . '(email, hash, id_usuario) VALUES ("' . $_POST['email'] . '", "' . $_POST['hash_email'] . '", ' . $usuario['id'] . ')';
 
             if (db_insert($sql)) {
                 // all good
@@ -494,10 +494,10 @@ LOG;
         if (verifyFormToken('form_add_tfno')) {
             verifyPostData(array(
                 'action', 'token', 'u',
-                'telefono'
+                'telefono', 'hash_tfno'
             ));
             verifyUrl();
-            if (db_insert('INSERT INTO ' . $config['tables.phone'] . '(telefono, id_usuario) VALUES ("' . $_POST['telefono'] . '", ' . $usuario['id'] . ')')) {
+            if (db_insert('INSERT INTO ' . $config['tables.phone'] . '(telefono, hash, id_usuario) VALUES ("' . $_POST['telefono'] . '", "' . $_POST['hash_tfno'] . '", ' . $usuario['id'] . ')')) {
                 // all good
                 $tfnos = user_get_tfnos();
             } else {
