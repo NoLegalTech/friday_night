@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS `lv_partido`;
-
 CREATE TABLE IF NOT EXISTS `lv_partido` (
 `id` int(11) NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -8,3 +6,7 @@ CREATE TABLE IF NOT EXISTS `lv_partido` (
 
 ALTER TABLE `lv_partido` ADD PRIMARY KEY (`id`);
 ALTER TABLE `lv_partido` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+
+--
+
+INSERT INTO `lv_migrations` (`id`) VALUES (2);

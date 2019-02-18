@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS `lv_admin`;
-
 CREATE TABLE IF NOT EXISTS `lv_admin` (
 `id` int(11) NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -8,3 +6,7 @@ CREATE TABLE IF NOT EXISTS `lv_admin` (
 
 ALTER TABLE `lv_admin` ADD PRIMARY KEY (`id`);
 ALTER TABLE `lv_admin` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+
+--
+
+INSERT INTO `lv_migrations` (`id`) VALUES (3);
