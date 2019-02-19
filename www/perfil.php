@@ -2,7 +2,7 @@
 
     require_once(__DIR__.'/inc/functions.php');
 
-    this_page_is_private();
+    this_page_is_private_for('user');
 
     $usuario = user_get_logged_user();
     $emails  = user_get_emails();
