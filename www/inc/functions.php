@@ -593,6 +593,23 @@ LOG;
         return count($rows);
     }
 
+    function admin_is_in_the_list($value) {
+        global $db;
+        global $config;
+
+        $rows = db_query('SELECT id FROM ' . $config['tables.email'] . ' WHERE hash = "' . $value . '"');
+        if (count($rows) > 0) {
+            return true;
+        }
+
+        $rows = db_query('SELECT id FROM ' . $config['tables.phone'] . ' WHERE hash = "' . $value . '"');
+        if (count($rows) > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     $config = config_read();
     $db = db_connect();
 

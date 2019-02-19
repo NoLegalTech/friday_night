@@ -50,6 +50,21 @@
         }
     });
 
+    $('form#form_api').on('submit', function(e) {
+        e.preventDefault();
+        var data = $('form#form_api textarea').val().split(',').map(_ => _.trim());
+        var data_encrypted = data.map(_ => '' + CryptoJS.SHA3(_, { outputLength: 128 }));
+        $.post( "api/check.php", { values: data_encrypted }, function( response ) {
+            var result = JSON.parse(response);
+            var accepted = result.accepted.map(_ => data[data_encrypted.indexOf(_)]);
+            var rejected = result.rejected.map(_ => data[data_encrypted.indexOf(_)]);
+            $('textarea#accepted').val( accepted.join("\n") );
+            $('textarea#rejected').val( rejected.join("\n") );
+            $('article.to_show').show();
+            $('article.to_hide').hide();
+        });
+    });
+
     skel.breakpoints({
         xlarge: '(max-width: 1680px)',
         large:  '(max-width: 1280px)',
