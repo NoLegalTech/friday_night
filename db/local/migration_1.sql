@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS `telefono` (
 
 
 INSERT INTO `usuario` (`id`, `email`, `activation_token`, `password`, `nombre`, `apellidos`, `dni`, `cp`, `oposicion_ideologia`, `oposicion_propaganda_fijo`, `oposicion_propaganda_movil`, `oposicion_propaganda_email`) VALUES
-(1, 'usuario@listaviernes.es', NULL, 'a6449be1c42c7ad827d4a99e937b9d75', 'Usuario', 'de Prueba', '12345678X', '08080', 1, 1, 1, 1);
--- password: "merda"
+(1, 'usuario@listaviernes.es', NULL, '8ea98c371dca825f21bc38afb4775a50', 'Usuario', 'de Prueba', '12345678X', '08080', 1, 1, 1, 1);
+-- password: "usuario"
 
 INSERT INTO `email` (`id`, `email`, `hash`, `id_usuario`) VALUES
 (1, 'usuario@listaviernes.es', 'de326a2bb50111f541752936140ea4f2', 1),
