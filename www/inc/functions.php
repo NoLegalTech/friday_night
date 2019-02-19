@@ -577,6 +577,14 @@ LOG;
         login($config['tables.admin'], 'admin', false);
     }
 
+    function admin_get_num_users() {
+        global $db;
+        global $config;
+
+        $rows = db_query('SELECT id FROM ' . $config['tables.user'] . ' WHERE activation_token IS NULL');
+        return count($rows);
+    }
+
     $config = config_read();
     $db = db_connect();
 

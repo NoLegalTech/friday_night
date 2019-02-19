@@ -16,6 +16,10 @@
             </header>
             <hr/>
 
+            <p>
+            Usuarios registrados: <strong><?php echo admin_get_num_users(); ?></strong>
+            </p>
+
         </article>
 
     </section>
