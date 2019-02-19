@@ -177,7 +177,15 @@ LOG;
             "presentacion"  => "Presentación"
         );
         if (isset($_SESSION['usuario'])) {
-            $menu_options['perfil'] = 'Mis datos';
+            if ($_SESSION['tipo_usuario'] == 'user') {
+                $menu_options['perfil'] = 'Mis datos';
+            }
+            if ($_SESSION['tipo_usuario'] == 'party') {
+                $menu_options['api'] = 'API';
+            }
+            if ($_SESSION['tipo_usuario'] == 'admin') {
+                $menu_options['backoffice'] = 'Backoffice';
+            }
             $menu_options['logout'] = 'Cerrar sesión';
         }
         echo '<!DOCTYPE HTML>';
