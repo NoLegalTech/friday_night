@@ -52,10 +52,26 @@
 
     $('form#form_api').on('submit', function(e) {
         e.preventDefault();
+
+        console.log('====[ AJAX request to the API ]========================');
+        console.log('  Sending POST request to api/check.php... ');
+
         var data = $('form#form_api textarea').val().split(',').map(_ => _.trim());
         var data_encrypted = data.map(_ => '' + CryptoJS.SHA3(_, { outputLength: 128 }));
-        $.post( "api/check.php", { values: data_encrypted }, function( response ) {
+        var post_data = { values: data_encrypted };
+
+        console.log('  POST data: ');
+        console.log(post_data);
+
+        $.post( "api/check.php", post_data, function( response ) {
             var result = JSON.parse(response);
+
+            console.log('  Response: ');
+            console.log(result);
+            console.log('  Determining which ones accepted and rejected from original data... ');
+            console.log('  Showing results... ');
+            console.log('====[ END OF request to the API ]======================');
+
             var accepted = result.accepted.map(_ => data[data_encrypted.indexOf(_)]);
             var rejected = result.rejected.map(_ => data[data_encrypted.indexOf(_)]);
             $('textarea#accepted').val( accepted.join("\n") );
