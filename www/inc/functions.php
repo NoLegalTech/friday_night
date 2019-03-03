@@ -177,7 +177,15 @@ LOG;
             "presentacion"  => "Presentación"
         );
         if (isset($_SESSION['usuario'])) {
-            $menu_options['perfil'] = 'Mis datos';
+            if ($_SESSION['tipo_usuario'] == 'user') {
+                $menu_options['perfil'] = 'Mis datos';
+            }
+            if ($_SESSION['tipo_usuario'] == 'party') {
+                $menu_options['api'] = 'API';
+            }
+            if ($_SESSION['tipo_usuario'] == 'admin') {
+                $menu_options['backoffice'] = 'Backoffice';
+            }
             $menu_options['logout'] = 'Cerrar sesión';
         }
         echo '<!DOCTYPE HTML>';
@@ -367,11 +375,11 @@ LOG;
         global $config;
 
         $registered = register(
-            array('token', 'email', 'pass', 'confirm-vote', 'u'),
+            array('token', 'email', 'hash_email', 'pass', 'confirm-vote', 'u'),
             $config['tables.user']
         );
 
-        if (db_insert('INSERT INTO ' . $config['tables.email'] . '(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $registered['user']['id'] . ')') === true) {
+        if (db_insert('INSERT INTO ' . $config['tables.email'] . '(email, hash, id_usuario) VALUES ("' . $_POST['email'] . '", "' . $_POST['hash_email'] . '", ' . $registered['user']['id'] . ')') === true) {
             // send email
         } else {
             doError('Se produjo un error inesperado al intentar registrar el usuario: <pre>' . $db->error . '</pre>');
@@ -465,11 +473,11 @@ LOG;
         if (verifyFormToken('form_add_email')) {
             verifyPostData(array(
                 'action', 'token', 'u',
-                'email'
+                'email', 'hash_email'
             ));
             verifyUrl();
 
-            $sql = 'INSERT INTO ' . $config['tables.email'] . '(email, id_usuario) VALUES ("' . $_POST['email'] . '", ' . $usuario['id'] . ')';
+            $sql = 'INSERT INTO ' . $config['tables.email'] . '(email, hash, id_usuario) VALUES ("' . $_POST['email'] . '", "' . $_POST['hash_email'] . '", ' . $usuario['id'] . ')';
 
             if (db_insert($sql)) {
                 // all good
@@ -494,10 +502,10 @@ LOG;
         if (verifyFormToken('form_add_tfno')) {
             verifyPostData(array(
                 'action', 'token', 'u',
-                'telefono'
+                'telefono', 'hash_tfno'
             ));
             verifyUrl();
-            if (db_insert('INSERT INTO ' . $config['tables.phone'] . '(telefono, id_usuario) VALUES ("' . $_POST['telefono'] . '", ' . $usuario['id'] . ')')) {
+            if (db_insert('INSERT INTO ' . $config['tables.phone'] . '(telefono, hash, id_usuario) VALUES ("' . $_POST['telefono'] . '", "' . $_POST['hash_tfno'] . '", ' . $usuario['id'] . ')')) {
                 // all good
                 $tfnos = user_get_tfnos();
             } else {
@@ -575,6 +583,31 @@ LOG;
         global $config;
 
         login($config['tables.admin'], 'admin', false);
+    }
+
+    function admin_get_num_users() {
+        global $db;
+        global $config;
+
+        $rows = db_query('SELECT id FROM ' . $config['tables.user'] . ' WHERE activation_token IS NULL');
+        return count($rows);
+    }
+
+    function admin_is_in_the_list($value) {
+        global $db;
+        global $config;
+
+        $rows = db_query('SELECT id FROM ' . $config['tables.email'] . ' WHERE hash = "' . $value . '"');
+        if (count($rows) > 0) {
+            return true;
+        }
+
+        $rows = db_query('SELECT id FROM ' . $config['tables.phone'] . ' WHERE hash = "' . $value . '"');
+        if (count($rows) > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     $config = config_read();

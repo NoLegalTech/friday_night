@@ -13,6 +13,8 @@
             e.preventDefault();
             var password = $('form#form_registro input[name=pass]').val();
             $('form#form_registro input[name=pass]').val(CryptoJS.SHA3(password, { outputLength: 128 }));
+            var email = $('form#form_registro input[name=email]').val();
+            $('form#form_registro input[name=hash_email]').val(CryptoJS.SHA3(email, { outputLength: 128 }));
             $(this).data('encoded', true);
             $(this).submit();
         }
@@ -26,6 +28,57 @@
             $(this).data('encoded', true);
             $(this).submit();
         }
+    });
+
+    $('form#form_add_email').on('submit', function(e) {
+        if (!$(this).data('encoded')) {
+            e.preventDefault();
+            var email = $('form#form_add_email input[name=email]').val();
+            $('form#form_add_email input[name=hash_email]').val(CryptoJS.SHA3(email, { outputLength: 128 }));
+            $(this).data('encoded', true);
+            $(this).submit();
+        }
+    });
+
+    $('form#form_add_tfno').on('submit', function(e) {
+        if (!$(this).data('encoded')) {
+            e.preventDefault();
+            var tfno = $('form#form_add_tfno input[name=telefono]').val();
+            $('form#form_add_tfno input[name=hash_tfno]').val(CryptoJS.SHA3(tfno, { outputLength: 128 }));
+            $(this).data('encoded', true);
+            $(this).submit();
+        }
+    });
+
+    $('form#form_api').on('submit', function(e) {
+        e.preventDefault();
+
+        console.log('====[ AJAX request to the API ]========================');
+        console.log('  Sending POST request to api/check.php... ');
+
+        var data = $('form#form_api textarea').val().split(',').map(_ => _.trim());
+        var data_encrypted = data.map(_ => '' + CryptoJS.SHA3(_, { outputLength: 128 }));
+        var post_data = { values: data_encrypted };
+
+        console.log('  POST data: ');
+        console.log(post_data);
+
+        $.post( "api/check.php", post_data, function( response ) {
+            var result = JSON.parse(response);
+
+            console.log('  Response: ');
+            console.log(result);
+            console.log('  Determining which ones accepted and rejected from original data... ');
+            console.log('  Showing results... ');
+            console.log('====[ END OF request to the API ]======================');
+
+            var accepted = result.accepted.map(_ => data[data_encrypted.indexOf(_)]);
+            var rejected = result.rejected.map(_ => data[data_encrypted.indexOf(_)]);
+            $('textarea#accepted').val( accepted.join("\n") );
+            $('textarea#rejected').val( rejected.join("\n") );
+            $('article.to_show').show();
+            $('article.to_hide').hide();
+        });
     });
 
     skel.breakpoints({

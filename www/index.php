@@ -46,6 +46,7 @@
                 <form id="form_registro" method="post" action="registrado.php" class="alt">
                     <input type="hidden" name="token" value="<?php echo $token_registro; ?>">
                     <input type="hidden" name="u" value="">
+                    <input type="hidden" name="hash_email" value="">
                     <div class="row uniform">
                         <div class="12u$ 12u$(xsmall)">
                             <input type="email" name="email" id="registro_email" value="" placeholder="Email" />
