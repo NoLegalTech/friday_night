@@ -10,11 +10,15 @@ Installation
 
 To install a local version:
 
+
 > Create your local database and run the migration scripts under db/
+
 
 > Edit conf/viernes.ini properly to connect to your database
 
+
 > Copy all files under www/ to your webserver public folder
+
 
 While we provide the source code, we do **not** offer support for your instance. We will probably ignore any question about installation and runtime issues.
 
