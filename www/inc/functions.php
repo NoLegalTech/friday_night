@@ -118,7 +118,7 @@ LOG;
     }
 
     function config_read() {
-        return parse_ini_file(__DIR__.'/../conf/viernes.ini');
+        return parse_ini_file(__DIR__.'/../../conf/viernes.ini');
     }
 
     function db_connect() {
