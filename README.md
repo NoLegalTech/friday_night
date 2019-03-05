@@ -36,5 +36,9 @@ Idea: [Secuoya Group](https://secuoyagroup.com/)
 License
 -------
 
-...
+Original design template by [HTML5 UP](https://html5up.net), licensed under [Creative Commons Attribution 3.0 License](https://html5up.net/license).
+See LICENSE-design-template.txt
+
+All the code is licensed under a [GNU GENERAL PUBLIC LICENSE Version 3](https://www.gnu.org/licenses/gpl.txt).
+See LICENSE.txt
 
