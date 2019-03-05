@@ -3,7 +3,7 @@ Lista Viernes
 
 This list intends to protect the citizens' privacy by allowing them to publicly declare they don't want to receive propaganda from political parties.
 
-Use [GitHub issues]() for bug reports and feature requests.
+Use [GitHub issues](https://github.com/NoLegalTech/lista_viernes/issues) for bug reports and feature requests.
 
 Installation
 ------------
